@@ -13,11 +13,25 @@ const Controls = (props) => {
         props.onFilter(source, date);
     }
 
+    const navigateHandler = (value) => {
+        props.onNavigate(value)
+    }
+
     return (
         <div className={styles.Controls}>
             <div className={styles.switch}>
-                <button>Results ({props.counter})</button>
-                <button>Wishlist (0)</button>
+                <button 
+                onClick={() => navigateHandler('R')} 
+                style={{
+                    backgroundColor: props.switchPage == 0 && '#333',
+                    color: props.switchPage == 0 ? 'white' : '#333',
+                }}>Results ({props.resultsCounter})</button>
+                <button 
+                onClick={() => navigateHandler('W')}
+                style={{
+                    backgroundColor: props.switchPage == 1 && '#333',
+                    color: props.switchPage == 1 ? 'white' : '#333',
+                }}>Wishlist ({props.wishlistCounter})</button>
             </div>
             <form className={styles.Filters} onSubmit={submitHandler}>
                 <div className={styles.date}>
