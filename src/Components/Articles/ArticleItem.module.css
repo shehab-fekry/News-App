@@ -1,0 +1,25 @@
+.article {
+    display: flex;
+    flex-flow: column;
+    border-top: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px 0px;
+}
+
+.source, .author, .title {
+    /* border-bottom: 1px solid #ccc; */
+    /* width: 100%; */
+    padding: 0px 10px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.footer {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    padding: 0px 10px;
+}
