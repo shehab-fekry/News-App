@@ -9,6 +9,7 @@ const SearchBar = (props) => {
     let [viewedArticles, setviewedArticles] = useState([]);
     let [currentPage, setCurrentPage] = useState(1);
 
+    // getting search suggestions from API
     const suggistionHandler = () => {
         if(articles.length == 0){
             axios.get('https://newsapi.org/v2/top-headlines?country=us&pageSize=30&apiKey=0308b0a480b8476ea2db40404f2af7b5')
