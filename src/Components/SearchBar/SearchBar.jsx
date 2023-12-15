@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import styles from './SearchBar.module.css';
 import ArtclesList from "../Articles/ArticlesList";
 import axios from "axios";
@@ -8,10 +8,11 @@ const SearchBar = (props) => {
     let [articles, setArticles] = useState([]);
     let [viewedArticles, setviewedArticles] = useState([]);
     let [currentPage, setCurrentPage] = useState(1);
+    const searchRef = useRef();
 
     // getting search suggestions from API
-    const suggistionHandler = () => {
-        if(articles.length == 0){
+    const suggistionHandler = (type) => {
+        if(type == 'click' && articles.length == 0){
             axios.get('https://newsapi.org/v2/top-headlines?country=us&pageSize=30&apiKey=0308b0a480b8476ea2db40404f2af7b5')
             .then(data => {
                 let articles = data.data.articles;
@@ -22,6 +23,10 @@ const SearchBar = (props) => {
             })
             .catch(err => console.log(err))
         } 
+        else if (type == 'change'){
+            if(showSuggestions == true)
+                setShowSuggestions(false);
+        }
         else setShowSuggestions(!showSuggestions);
     }
 
@@ -50,15 +55,26 @@ const SearchBar = (props) => {
         }
     }
 
+    const submitHandler = () => {
+        let searchValue = searchRef.current.value;
+        searchValue = searchValue.split(' ');
+        searchValue = searchValue.join(' AND ');
+        searchValue = '(' + searchValue + ')';
+
+        props.onSearch(searchValue);        
+    }
+
     return (
         <div className={styles.container}>
             {/* Search Bar */}
             <input 
             className={styles.input} 
-            type='text' 
+            type='text'
             placeholder='Search News'
-            onClick={suggistionHandler}/>
-            <button className={styles.btn}>Search</button>
+            ref={searchRef}
+            onClick={()=> suggistionHandler('click')}
+            onChange={() => suggistionHandler('change')}/>
+            <button className={styles.btn} onClick={submitHandler}>Search</button>
             
             {/* Suggistions List */}
             <div style={{
