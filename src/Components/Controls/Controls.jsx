@@ -36,10 +36,8 @@ const Controls = (props) => {
             <form className={styles.Filters} onSubmit={submitHandler}>
                 <div className={styles.date}>
                     <label htmlFor="date">Date</label>
-                    <select  id="date" ref={dateRef}>
+                    <select  id="date" ref={dateRef} title="the API only provides 2023 result, hence; 2021 & 2022 wont show any results">
                         <option defaultChecked value='all'>All</option>
-                        <option value='2019'>2019</option>
-                        <option value='2020'>2020</option>
                         <option value='2021'>2021</option>
                         <option value='2022'>2022</option>
                         <option value='2023'>2023</option>

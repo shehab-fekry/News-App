@@ -8,21 +8,38 @@ import Controls from './Components/Controls/Controls';
 
 function App() {
   let [results, setResults] = useState([]);
-  let [filteredResults, setFilteredResults] = useState([]);
-  let [switchPage, setSwitchPage] = useState(0); // search Results or wishlist
+  let [filterCounter, setFilterCounter] = useState(0);
   let [wishList, setWishList] = useState([]); // wishlist of news
+  let [switchPage, setSwitchPage] = useState(0); // search Results or wishlist
 
 
   const searchHandler = (searchValues) => {
     let q = searchValues;
-    axios.get(`https://newsapi.org/v2/everything?q=${q}&sortBy=relevancy&page=1&pageSize=10&apiKey=0308b0a480b8476ea2db40404f2af7b5`)
+    axios.get(`https://newsapi.org/v2/everything?q=${q}&sortBy=relevancy&page=1&pageSize=100&apiKey=0308b0a480b8476ea2db40404f2af7b5`)
     .then(data => {
-      setResults(data.data.articles);
-      setFilteredResults(data.data.articles)
+      let updatedData = [...data.data.articles];
+      
+      // set initial values for visibility attribute and results counter
+      let count = 0;
+      updatedData.forEach(article => {
+        article.visibility = true;
+        count +=1;
+      });
+      
+      // modify date format
+      let ModifiedDate;
+      updatedData.forEach(article => {
+        ModifiedDate = new Date(article.publishedAt);
+        article.publishedAt = '' + ModifiedDate.getFullYear();
+      })
+
+      setFilterCounter(count)
+      setResults(updatedData);
     })
     .catch(err => console.log(err))
   }
 
+  // for navigation between results and wishlist
   const navigateHandler = (value) => {
     switch(value){
       case 'R':
@@ -38,28 +55,60 @@ function App() {
 
   const filterHandler = (source, date) => {
     let dateModifiedResults = [...results];
-    let Mdate;
-    
-    // modify date format
-    dateModifiedResults.forEach(e => {
-      Mdate = new Date(e.publishedAt);
-      e.publishedAt = '' + Mdate.getFullYear();
-    })
 
-    // filter
+    console.log(typeof source, typeof date)
+
+    // filter results by visibilty
     if(source == 'all' && date == 'all'){
-      return setFilteredResults(dateModifiedResults)
+      dateModifiedResults.forEach(result => result.visibility = true);
     } else if(source == 'all'){
-      let dateFiltered = dateModifiedResults.filter(result => result.publishedAt == date);
-      return setFilteredResults(dateFiltered);
+      dateModifiedResults.forEach(result => {
+        if(result.publishedAt != date) result.visibility = false;
+        else result.visibility = true;
+      });
     } else if (date == 'all'){
-      let sourceFiltered = dateModifiedResults.filter( result => result.source.name == source);
-      return setFilteredResults(sourceFiltered)
+      dateModifiedResults.forEach( result => {
+        if(result.source.name != source) result.visibility = false;
+        else result.visibility = true; 
+      });
     } else {
-      let dateFiltered = dateModifiedResults.filter(result => result.publishedAt == date);
-      let sourceDateFiltered = dateFiltered.filter( result => result.source.name == source);
-      return setFilteredResults(sourceDateFiltered);
+      dateModifiedResults.forEach(result => {
+        if(result.publishedAt != date || result.source.name != source) result.visibility = false;
+        else result.visibility = true;
+      });
     }
+
+    // count visible results
+    let count = 0;
+    dateModifiedResults.forEach(result => { if(result.visibility == true) count += 1 });
+
+    setFilterCounter(count)
+    setResults(dateModifiedResults);
+  }
+
+  const addWishHandler = (index) => {
+    // add listed attribute, used in ArticleItem.jsx => to disable add button
+    let updatedResults = [...results];
+    updatedResults[index].listed = true;
+    updatedResults[index].index = index;
+    // add item to wishlist
+    let newItem = results[index];
+    let updatedWishlist = [...wishList, newItem];
+    // update state
+    setResults(updatedResults);
+    setWishList(updatedWishlist);
+  }
+
+  const removeWishHandler = (indx, index) => {
+    // remove listed attribute, used in ArticleItem.jsx => to active add button
+    let updatedResults = [...results];
+    updatedResults[index].listed = false;   // (index) represent article place in results list
+    // remove item from wishlist
+    let updatedWishlist = [...wishList];
+    updatedWishlist.splice(indx, 1);        // (indx) represent article place in wish list
+    // update state
+    setResults(updatedResults);
+    setWishList(updatedWishlist);
   }
 
   return (
@@ -70,10 +119,14 @@ function App() {
         onFilter={filterHandler} 
         onNavigate={navigateHandler} 
         switchPage={switchPage}
-        resultsCounter={filteredResults.length}
+        resultsCounter={filterCounter}
         wishlistCounter={wishList.length}/>
         ) : null}
-      <Results results={switchPage == 0 ? filteredResults : wishList} />
+      <Results 
+      switchPage={switchPage}
+      results={switchPage == 0 ? results : wishList}
+      addWish={addWishHandler}
+      removeWish={removeWishHandler}/>
     </div>
   )
 }

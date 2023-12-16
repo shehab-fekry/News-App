@@ -21,5 +21,21 @@
     display: flex;
     flex-flow: row;
     justify-content: space-between;
+    align-items: center;
     padding: 0px 10px;
+    /* border: 1px solid black; */
+}
+
+.footer a {
+    margin-right: 15px;
+    visibility: collapse;
+}
+
+.article:hover a {
+    visibility: visible;
+}
+
+.footer button {
+    background-color: #f8f8f8;
+    /* margin-left: 10px; */
 }

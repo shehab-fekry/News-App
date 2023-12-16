@@ -2,6 +2,8 @@ import React, {useRef, useState} from "react";
 import styles from './SearchBar.module.css';
 import ArtclesList from "../Articles/ArticlesList";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const SearchBar = (props) => {
     let [showSuggestions, setShowSuggestions] = useState(false);
@@ -16,7 +18,9 @@ const SearchBar = (props) => {
             axios.get('https://newsapi.org/v2/top-headlines?country=us&pageSize=30&apiKey=0308b0a480b8476ea2db40404f2af7b5')
             .then(data => {
                 let articles = data.data.articles;
+                articles.forEach(article => article.visibility = true);
                 let toview = articles.slice(0, 3);
+                
                 setviewedArticles(toview)
                 setArticles(articles)  
                 setShowSuggestions(!showSuggestions);
@@ -74,7 +78,9 @@ const SearchBar = (props) => {
             ref={searchRef}
             onClick={()=> suggistionHandler('click')}
             onChange={() => suggistionHandler('change')}/>
-            <button className={styles.btn} onClick={submitHandler}>Search</button>
+            <button className={styles.btn} onClick={submitHandler}>
+                <FontAwesomeIcon  icon={faMagnifyingGlass} style={{color: "#ffffff",}} />
+            </button>
             
             {/* Suggistions List */}
             <div style={{

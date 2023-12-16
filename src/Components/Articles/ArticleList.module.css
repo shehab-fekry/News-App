@@ -3,5 +3,9 @@
     margin: 0px;
     padding: 0px;
     width: 100%;
-    background-color: white;
+    /* background-color: white; */
+}
+
+.list div:last-child {
+    border-bottom: none;
 }

@@ -1,4 +1,5 @@
 .Controls {
+    width: 100%;
     position: relative;
     margin-top: 60px;
     display: flex;
@@ -8,7 +9,7 @@
     border-radius: 10px;
     /* padding: 10px; */
 }
-
+ 
 .switch {
     /* border: 1px solid black; */
     border-radius: 10px;
@@ -69,7 +70,7 @@ select {
 .actions button {
     /* height: 30px; */
     padding: 5px;
-    margin: 2px;
+    margin: 2px; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -80,6 +81,31 @@ select {
     /* border: 1px solid blue; */
 }
 
-/* .apply {
-    background-color: green;
-} */
+@media only screen and (max-width: 600px) {
+    .Filters {
+      flex-flow: column;
+    }
+
+    .Filters div {
+        flex-flow: row;
+        justify-content: center;
+        width: 100%;
+        /* border: 1px solid black; */
+    }
+
+    .source label, .date label {
+        width: 50%;
+        text-align: center;
+    }
+
+    .source select, .date select {
+        width: 50%;
+        text-align: center;
+    }
+
+    .actions button{
+        width: 100px;
+        margin-top: 10px;
+    }
+  }
+  

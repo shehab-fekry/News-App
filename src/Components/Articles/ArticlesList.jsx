@@ -6,7 +6,13 @@ const ArtclesList = (props) => {
     let articles = props.articles;
     return (
         <ul className={styles.list}>
-            {articles?.map((article, indx) => <ArticleItem key={indx} article={article}/>)}
+            {articles?.map((article, indx) => (
+            <ArticleItem 
+            key={indx} 
+            article={article} 
+            type={props.type} 
+            addWish={() => props.addWish(indx)}
+            removeWish={() => props.removeWish(indx, article.index)}/>))}
         </ul>
     )
 }
